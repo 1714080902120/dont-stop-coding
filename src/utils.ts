@@ -1,6 +1,17 @@
 import { position } from "./type";
 import * as vscode from "vscode";
 
+export const creageRange = (start: position, end: position): vscode.Range => {
+  return new vscode.Range(
+    new vscode.Position(...start),
+    new vscode.Position(...end)
+  );
+};
+
+export const createRange = (start: vscode.Position, end: vscode.Position) => {
+  return new vscode.Range(start, end);
+};
+
 export const getRange = (allText: string, deleteNum: number): vscode.Range => {
   const lines = allText.split("\n");
 
@@ -46,7 +57,6 @@ export const getDeleteRange = (
   editor: vscode.TextEditor,
   deleteNum: number
 ): vscode.Range => {
-
   // get cursor position
   const cursorPosition = editor.selection.active;
 
@@ -74,21 +84,62 @@ export const getDeleteRange = (
     }
   }
 
-  return new vscode.Range(
-    new vscode.Position(...start),
-    new vscode.Position(...end)
-  );
+  return creageRange(start, end);
 };
 
 // show gif
-export const showGif = (window: typeof vscode.window, editor: vscode.TextEditor): void => {
-  const textDecoration = window.createTextEditorDecorationType({
-    overviewRulerLane: 4,
-    backgroundColor: 'rgba(0, 0, 0, .5)',
-    outline: 'none',
-    border: '1px solid #f00',
-    textDecoration: 'none',
-    gutterIconPath: vscode.Uri.parse('file://')
+export const showGif = (
+  window: typeof vscode.window,
+  editor: vscode.TextEditor
+): void => {
+  const css = objectToCssString({
+    position: "absolute",
+    // right: "5%",
+    top: "20px",
+
+    ["font-family"]: "monospace",
+    ["font-weight"]: "900",
+
+    // width: "50px",
+    // ["z-index"]: 1,
+    ["pointer-events"]: "none",
+    ["text-align"]: "right",
+    ["width"]: `60vh`,
+    ["height"]: `60vh`,
+    ["background-repeat"]: "no-repeat",
+    ["background-size"]: "cover",
+    ["background-position"]: "right",
+    ["z-index"]: -1,
+    ["right"]: `10vh`,
+    ["background-image"]:
+      'url("https://raw.githubusercontent.com/1714080902120/dont-stop-coding/main/src/image/that_is_good.png")',
   });
-  editor.setDecorations(textDecoration, );
+
+  const textDecoration = window.createTextEditorDecorationType({
+    before: {
+      contentText: "",
+      color: "#fff",
+      textDecoration: `none; ${css}`,
+    },
+    rangeBehavior: vscode.DecorationRangeBehavior.ClosedClosed,
+  });
+  const position: vscode.Position = (editor.visibleRanges as vscode.Range[]).sort()[0].start;
+  if (position) {
+    const range = createRange(position, position);
+    editor.setDecorations(textDecoration, [range]);
+  }
+};
+
+export const objectToCssString = (settings: any): string => {
+  let value = "";
+  const cssString = Object.keys(settings)
+    .map((setting) => {
+      value = settings[setting];
+      if (typeof value === "string" || typeof value === "number") {
+        return `${setting}: ${value};`;
+      }
+    })
+    .join(" ");
+
+  return cssString;
 };
