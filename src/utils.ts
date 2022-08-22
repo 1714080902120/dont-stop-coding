@@ -1,6 +1,8 @@
 import { position } from "./type";
 import * as vscode from "vscode";
 
+let textDecoration: null | vscode.TextEditorDecorationType = null;
+
 export const creageRange = (start: position, end: position): vscode.Range => {
   return new vscode.Range(
     new vscode.Position(...start),
@@ -104,18 +106,19 @@ export const showGif = (
     // ["z-index"]: 1,
     ["pointer-events"]: "none",
     ["text-align"]: "right",
-    ["width"]: `60vh`,
-    ["height"]: `60vh`,
+    ["width"]: `10vh`,
+    ["height"]: `10vh`,
     ["background-repeat"]: "no-repeat",
     ["background-size"]: "cover",
-    ["background-position"]: "right",
+    ["background-position"]: "center",
     ["z-index"]: -1,
     ["right"]: `10vh`,
+    ["opacity"]: '1',
     ["background-image"]:
-      'url("https://raw.githubusercontent.com/1714080902120/dont-stop-coding/main/src/image/that_is_good.png")',
+      'url("https://raw.githubusercontent.com/1714080902120/dont-stop-coding/main/src/image/poor_boy.gif")',
   });
 
-  const textDecoration = window.createTextEditorDecorationType({
+  textDecoration = window.createTextEditorDecorationType({
     before: {
       contentText: "",
       color: "#fff",
@@ -123,10 +126,19 @@ export const showGif = (
     },
     rangeBehavior: vscode.DecorationRangeBehavior.ClosedClosed,
   });
+
   const position: vscode.Position = (editor.visibleRanges as vscode.Range[]).sort()[0].start;
+
   if (position) {
     const range = createRange(position, position);
     editor.setDecorations(textDecoration, [range]);
+  }
+};
+
+export const hideGif = (editor: vscode.TextEditor): void => {
+  if (textDecoration) {
+    // textDecoration.dispose();
+    editor.setDecorations(textDecoration, []);
   }
 };
 

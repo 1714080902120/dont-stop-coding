@@ -2,13 +2,15 @@
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from "vscode";
 import { DELAY, DELETE_NUM } from "./constant";
-import { getDeleteRange, showGif } from "./utils";
+import { getDeleteRange, hideGif, showGif } from "./utils";
 
 // timer
 let timer: any = null;
 
 // is active
 let isActive = false;
+// had show image
+let hadShowImg = false;
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
@@ -20,6 +22,23 @@ export function activate(context: vscode.ExtensionContext) {
   // The commandId parameter must match the command field in package.json
 
   const { window, workspace } = vscode;
+
+  // clear timer
+  const clearTimer = () => {
+    if (timer) {
+      clearInterval(timer);
+      timer = null;
+    }
+  };
+
+  // hide img
+  const hideImg = () => {
+    if (hadShowImg) {
+      hideGif(window.activeTextEditor as vscode.TextEditor);
+      hadShowImg = false;
+    }
+  }
+
 
   const loadPluginCallback = () => {
     // get current active editor
@@ -40,11 +59,12 @@ export function activate(context: vscode.ExtensionContext) {
       if (allText.length <= 0) {
         if (timer) {
           // TODO show gif
-          showGif(window, editor);
-
+          if (!hadShowImg) {
+            hadShowImg = true;
+            showGif(window, editor);
+          }
           // if nothing left, clear timer
-          clearInterval(timer);
-          timer = null;
+          clearTimer();
         }
         return;
       }
@@ -80,13 +100,17 @@ export function activate(context: vscode.ExtensionContext) {
     // listen to textDocument change
     workspace.onDidChangeTextDocument((event) => {
       allText = document.getText();
+
+      // hide img when change
+      hideImg();
+
       startInterval();
     });
   };
 
   // register open
   let startPlugin = vscode.commands.registerCommand(
-    "dont-stop-coding.loadPlugin",
+    "dont-stop-coding.startPlugin",
     () => {
       // The code you place here will be executed every time your command is executed
       // Display a message box to the user
@@ -97,10 +121,7 @@ export function activate(context: vscode.ExtensionContext) {
       loadPluginCallback();
       // listen to textEditor change
       window.onDidChangeActiveTextEditor((event) => {
-        if (timer) {
-          clearInterval(timer);
-          timer = null;
-        }
+        clearTimer();
         // if not active, do not do delete
         if (!isActive) {
           return;
@@ -112,13 +133,16 @@ export function activate(context: vscode.ExtensionContext) {
 
   // register close
   let closePlugin = vscode.commands.registerCommand(
-    "dont-stop-coding.removePlugin",
+    "dont-stop-coding.closePlugin",
     () => {
-      if (timer) {
-        clearInterval(timer);
-        timer = null;
-      }
+      clearTimer();
+
+      // init state
       isActive = false;
+
+      // hide img when change
+      hideImg();
+      
       vscode.window.showInformationMessage(
         "dont-stop-coding plugin is deactivate, bye~"
       );
@@ -135,5 +159,8 @@ export function deactivate() {
     timer = null;
   }
   isActive = false;
+  
+  hadShowImg = false;
+
   console.log('"dont-stop-coding" is now deactive!');
 }
