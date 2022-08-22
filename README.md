@@ -11,7 +11,7 @@ I am not responsible for any problems that cause project losses.
 
 ## example
 
-\!\[example\]\(images/example.gif\)
+![example](https://raw.githubusercontent.com/1714080902120/dont-stop-coding/main/src/image/example.gif)
 
 
 ## Extension Settings
