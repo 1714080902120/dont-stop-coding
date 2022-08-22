@@ -1,10 +1,12 @@
 {
   "name": "dont-stop-coding",
+  "publisher": "1714080902120",
   "displayName": "dont-stop-coding",
   "description": "Once you stop coding and exceed the waiting time, it will continue to delete your code for a given time until you write the code again",
-  "version": "0.0.1",
+  "version": "0.0.2",
+  "icon": "logo.png",
   "engines": {
-    "vscode": "^1.0.0"
+    "vscode": "^1.70.0"
   },
   "categories": [
     "Other"
@@ -14,29 +16,29 @@
     "url": "https://github.com/1714080902120/dont-stop-coding"
   },
   "activationEvents": [
-    "onCommand:dont-stop-coding.loadPlugin"
+    "onCommand:dont-stop-coding.startPlugin"
   ],
   "main": "./dist/extension.js",
   "contributes": {
     "commands": [
       {
-        "command": "dont-stop-coding.loadPlugin",
-        "title": "load `dont-stop-coding` plugin"
+        "command": "dont-stop-coding.startPlugin",
+        "title": "start dont-stop-coding plugin"
       },
       {
-        "command": "dont-stop-coding.removePlugin",
-        "title": "remove `dont-stop-coding` plugin"
+        "command": "dont-stop-coding.closePlugin",
+        "title": "close dont-stop-coding plugin"
       }
     ],
     "keybindings": [
       {
-        "command": "dont-stop-coding.loadPlugin",
+        "command": "dont-stop-coding.startPlugin",
         "key": "ctrl+alt+[",
         "mac": "cmd+[",
         "when": "editorFocus"
       },
       {
-        "command": "dont-stop-coding.removePlugin",
+        "command": "dont-stop-coding.closePlugin",
         "key": "ctrl+alt+]",
         "mac": "cmd+]",
         "when": "editorFocus"
