@@ -6,8 +6,9 @@ I am not responsible for any problems that cause project losses.
 
 ## how to use
 
-1. key down F1 and input dontstopcoding select start or close
-2. shortcut `ctrl + alt + [` start plugin and `ctrl + alt + ]` stop plugin
+1. key down F1 and input dontstopcoding select start or close.
+2. shortcut `ctrl + alt + [` start plugin and `ctrl + alt + ]` stop plugin in windows.
+3. shortcut `cmd + [` start and `cmd + ]` stop in macOs.
 
 ## example
 
